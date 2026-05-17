@@ -10,4 +10,4 @@ def carts_list(request):
         ).annotate(items_count=Count("products"))
     }
 
-    return render(request, 'store/cart_list.html', context)
+    return render(request, 'store/carts_list.html', context)

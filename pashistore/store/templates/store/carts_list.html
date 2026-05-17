@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Список корзин</title>
+</head>
+<body>
+    <h1 class="heading">Список зарегистрированных корзин</h1>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Пользователь</th>
+            <th>Статус</th>
+            <th>Дата создания</th>
+            <th>Товары</th>
+            <th>Всего товаров</th>
+        </tr>
+
+        {% for cart in carts %}
+            <tr>
+                <td>#{{cart.id}}</td> <!-- ID -->
+                <td>{{cart.customer}}</td> <!-- Пользователь -->
+                <!-- Django (get_<FOO>_display) -->
+                <td class="cart_status--{{cart.status}}">{{cart.get_status_display}}</td> <!-- Статус -->
+                <td>{{ cart.created_at|date:"d.m.Y H:i" }}</td> <!-- Дата и время -->
+                <!-- Товары -->
+                <td>
+                    <ul>
+                        {% for item in cart.products.all %}
+                            <li>{{ item.product.name }} X {{ item.quantity }}</li>
+                        {% empty %}
+                            <li>Данные о товарах отсутствуют.</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td> cart.products.count </td> <!-- Всего товаров -->
+            </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

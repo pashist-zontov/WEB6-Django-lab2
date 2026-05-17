@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models import Sum, Count
-from django.db.utils import timezone
 
 class Customers(models.Model):
     name = models.CharField("Имя покупателя", max_length=100)
@@ -36,6 +35,8 @@ class Carts(models.Model):
         ("Forgotten", "Заброшена")
     )
 
+    # cart_id = models.IntegerField(primary_key=True) <-- Вопрос: стоит ли создавать свой первичный ключ в работах подобной этой?
+    # Или для простых баз можно обойтись без них?
     customer = models.ForeignKey(Customers, on_delete=models.CASCADE, related_name="carts", verbose_name="Покупатель")
     status = models.CharField("Статус", max_length=20, choices=STATUS_CHOICES, default="Active")
     created_at = models.DateTimeField("Дата и время создания", auto_now_add=True)
@@ -63,7 +64,7 @@ class CartsProducts(models.Model):
     class Meta:
         verbose_name = "Позиция корзины"
         verbose_name_plural = "Позиции"
-        unqiue_together = ("cart", "product") # !!! Корзина и товары должны отображаться уникальные друг по от
+        unique_together = ("cart", "product") # !!! Корзина и товары должны отображаться уникальные друг по от
     
     def __str__(self):
         return f"{self.quantity} x {self.product}"

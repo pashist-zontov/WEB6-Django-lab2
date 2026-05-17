@@ -24,12 +24,12 @@ class CartsAdmin(admin.ModelAdmin):
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'description', 'image')
-    list_filter = ('name')
+    list_filter = ('name',)
 
 @admin.register(Customers)
 class CustomersAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'phone', 'created_at')
-    list_filter = ('name')
+    list_filter = ('name',)
 
 
 # Я не одобряю такой подход, но если можно будет - использую
