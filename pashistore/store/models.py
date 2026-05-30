@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum, Count
+from django.db.models import Sum, F, DecimalField
 
 class Customers(models.Model):
     name = models.CharField("Имя покупателя", max_length=100)
@@ -32,7 +32,7 @@ class Carts(models.Model):
     STATUS_CHOICES = (
         ("Active", "Активна"),
         ("Completed", "Оформлена"),
-        ("Forgotten", "Заброшена")
+        ("Closed", "Неактивна")
     )
 
     # cart_id = models.IntegerField(primary_key=True) <-- Вопрос: стоит ли создавать свой первичный ключ в работах подобной этой?
@@ -51,10 +51,16 @@ class Carts(models.Model):
         return f"Корзина покупателя #{self.customer_id} от {self.created_at}"
     
     def products_amount(self):
-        return self.products.aggregate(total=Sum("quantity"))['total_amount']
+        return self.products.aggregate(total=Sum("quantity"))['total'] or 0
     
     def unique_products_count(self):
         return self.products.count()
+
+    def total_price(self):
+        result = self.products.aggregate(
+            total=Sum(F('product__price') * F('quantity'), output_field=DecimalField())
+        )
+        return result['total'] or 0
     
 class CartsProducts(models.Model):
     cart = models.ForeignKey(Carts, on_delete=models.CASCADE, related_name="products", verbose_name="Корзина")
@@ -64,7 +70,8 @@ class CartsProducts(models.Model):
     class Meta:
         verbose_name = "Позиция корзины"
         verbose_name_plural = "Позиции"
-        unique_together = ("cart", "product") # !!! Корзина и товары должны отображаться уникальные друг по от
+        unique_together = ("cart", "product") # !!! Корзина и товары должны отображаться уникальные друг по отношению к другу
     
     def __str__(self):
-        return f"{self.quantity} x {self.product}"
+        return f'{self.product}'
+    

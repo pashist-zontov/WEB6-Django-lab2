@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    
-    <title>Список корзин</title>
-</head>
-<body>
-    <h1 class="heading">Список зарегистрированных корзин</h1>
+{% load static %}
 
-    <table>
+<table class="carts-tb">
+    <thead>
         <tr>
             <th>ID</th>
             <th>Пользователь</th>
@@ -16,10 +9,13 @@
             <th>Дата создания</th>
             <th>Товары</th>
             <th>Всего товаров</th>
+            <th>Сумма товаров</th>
         </tr>
-
+    </thead>
+        
+    <tbody>
         {% for cart in carts %}
-            <tr>
+            <tr class="align-rows">
                 <td>#{{cart.id}}</td> <!-- ID -->
                 <td>{{cart.customer}}</td> <!-- Пользователь -->
                 <!-- Django (get_<FOO>_display) -->
@@ -27,18 +23,20 @@
                 <td>{{ cart.created_at|date:"d.m.Y H:i" }}</td> <!-- Дата и время -->
                 <!-- Товары -->
                 <td>
-                    <ul>
+                    <ul class="prod-list">
                         {% for item in cart.products.all %}
-                            <li>{{ item.product.name }} X {{ item.quantity }}</li>
+                            <li>{{item}} <span class="quantity-st">x {{item.quantity}}</span></li>
                         {% empty %}
                             <li>Данные о товарах отсутствуют.</li>
                         {% endfor %}
                     </ul>
                 </td>
-                <td> cart.products.count </td> <!-- Всего товаров -->
+                <td class="prod-amount"> {{ cart.products_amount }} </td> <!-- Всего товаров -->
+                <td>{{cart.total_price}} рублей</td>
+                <td class="btn-row"><button class="editcart-btn">Изменить</button></td>
             </tr>
-        {% endfor %}
-    </table>
 
-</body>
-</html>
+        {% endfor %}
+    </tbody>
+
+    </table>

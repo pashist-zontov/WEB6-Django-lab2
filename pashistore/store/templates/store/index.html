@@ -1,0 +1,16 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+    <title>Главная</title>
+</head>
+<body>
+    <h1 class="heading">Список товаров</h1>
+    <main>
+        {% include 'store/cart_block.html' %}
+    </main>
+</body>
+</html>

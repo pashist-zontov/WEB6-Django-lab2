@@ -1,0 +1,20 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'store/css/carts_list.css' %}">
+    <title>Список корзин</title>
+</head>
+<body>
+    <h1 class="heading">Список зарегистрированных корзин</h1>
+    <main>
+        {% include 'store/cart_block.html' %}
+    </main>
+
+    <footer>
+        
+    </footer>
+</body>
+</html>
