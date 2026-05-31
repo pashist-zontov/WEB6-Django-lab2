@@ -4,13 +4,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
-    <title>Главная</title>
+    <link rel="stylesheet" href="{% static 'store/css/catalog.css' %}">
+    <link rel="stylesheet" href="{% static 'store/css/carts_list.css' %}">
+    <title>Список товаров</title>
 </head>
 <body>
-    <h1 class="heading">Список товаров</h1>
-    <main>
-        {% include 'store/cart_block.html' %}
+    <div class="main-part">
+        <h1 class="heading">Список товаров</h1>
+    </div>
+
+    <main class="container">
+        <p class="catalog-info">
+            Найдено товаров: <strong>{{ products|length }}</strong>
+        </p>
+
+        <div class="cards-grid">
+            {% for product in products %}
+                {% include 'store/partials/product_card.html' with product=product%}
+            {% empty %}
+                <div class="empty-catalog">
+                    <p>Товары не найдены. Админам <a href="{% url 'admin:index' %}">сюда</a></p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Если имеется более 10 товаров - появляется пагинация -->
+        {% if products.has_other_pages %}   
+        <div class="pagination">
+            {% if products.has_previous %}
+                <a href="?page=1">1</a>
+                <a href="?page={{ products.previous_page_number }}"></a>
+            {% endif %}
+
+            <span>Страница {{ products.number }} из {{ products.paginator.page_num }}</span>
+        </div>
+        {% endif %}
     </main>
+
+    <footer>
+        {% block footer %}{% endblock %}
+    </footer>
 </body>
 </html>

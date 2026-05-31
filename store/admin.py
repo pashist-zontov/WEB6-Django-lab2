@@ -9,6 +9,13 @@ class CartsProductsInline(admin.TabularInline):
     autocomplete_fields = ('product',)
     
 
+class CartsInline(admin.TabularInline):
+    model = Carts
+    extra = 1
+    can_delete = True
+    fields = ('status', 'created_at', 'updated_at')
+    readonly_fields = ('created_at', 'updated_at')
+
 @admin.register(Carts)
 class CartsAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -48,6 +55,7 @@ class CustomersAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at',)
     list_display = ('name', 'email', 'phone', 'created_at')
     list_filter = ('name',)
+    inlines = [CartsInline]
 
 
 # Я не одобряю такой подход

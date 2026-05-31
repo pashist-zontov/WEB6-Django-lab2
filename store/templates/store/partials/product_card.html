@@ -1,0 +1,17 @@
+<div class="product-card">
+    <div class="card-img" style="background-image: url('{{ product.image }}')"></div>
+
+    <div class="card-content">
+        <h3 class="product-name">{{ product.name }}</h3>
+        {% if product.description %}
+        <p class="product-desc">{{ product.description|truncatewords:5 }}</p>
+        {% endif %}
+
+        <div class="product-footer">
+            <span class="product-price">{{ product.price|floatformat:2 }} руб.</span>
+            <button class="add-to-cart-btn" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}">
+                В корзину
+            </button>
+        </div>
+    </div>
+</div>

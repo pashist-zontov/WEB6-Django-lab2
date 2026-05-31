@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum, F, DecimalField
+from django.db.models import Sum, F, DecimalField, Q
 
 class Customers(models.Model):
     name = models.CharField("Имя покупателя", max_length=100)
@@ -34,9 +34,7 @@ class Carts(models.Model):
         ("Completed", "Оформлена"),
         ("Closed", "Неактивна")
     )
-
-    # cart_id = models.IntegerField(primary_key=True) <-- Вопрос: стоит ли создавать свой первичный ключ в работах подобной этой?
-    # Или для простых баз можно обойтись без них?
+    
     customer = models.ForeignKey(Customers, on_delete=models.CASCADE, related_name="carts", verbose_name="Покупатель")
     status = models.CharField("Статус", max_length=20, choices=STATUS_CHOICES, default="Active")
     created_at = models.DateTimeField("Дата и время создания", auto_now_add=True)
@@ -46,6 +44,13 @@ class Carts(models.Model):
         verbose_name = "Корзина"
         verbose_name_plural = "Корзины"
         ordering = ["-updated_at", "-created_at"]
+        
+        """Строго максимум одна активная корзина на одного пользователя"""
+        constraints = [models.UniqueConstraint(
+            fields = ['customer'],
+            condition=Q(status='active'),
+            name='unique_active_cart_per_buyer'
+        )]
     
     def __str__(self):
         return f"Корзина покупателя #{self.customer_id} от {self.created_at}"
