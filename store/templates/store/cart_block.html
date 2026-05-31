@@ -19,7 +19,7 @@
                 <td>#{{cart.id}}</td> <!-- ID -->
                 <td>{{cart.customer}}</td> <!-- Пользователь -->
                 <!-- Django (get_<FOO>_display) -->
-                <td class="cart_status--{{cart.status}}">{{cart.get_status_display}}</td> <!-- Статус -->
+                <td class="cart_status--{{cart.status}}">{{ cart.get_status_display }}</td> <!-- Статус -->
                 <td>{{ cart.created_at|date:"d.m.Y H:i" }}</td> <!-- Дата и время -->
                 <!-- Товары -->
                 <td>
@@ -35,7 +35,6 @@
                 <td>{{cart.total_price}} рублей</td>
                 <td class="btn-row"><button class="editcart-btn">Изменить</button></td>
             </tr>
-
         {% endfor %}
     </tbody>
 

@@ -5,6 +5,8 @@ from django.db import transaction
 from django.utils import timezone
 from .models import Carts, Products, Customers, CartsProducts
 from django.core.paginator import Paginator
+from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 def carts_list(request):
     context = {
@@ -89,3 +91,16 @@ def cart_detail(request, cart_id):
     }
 
     return render(request, 'carts/cart_detail.html', context)
+
+@require_POST
+def remove_from_cart(request, cart_id, product_id):
+    cart = get_object_or_404(Carts, id=cart_id)
+    cart_product = get_object_or_404(CartsProducts, id=product_id, cart=cart)
+    cart_product.delete()
+
+    cart.updated_at = timezone.now()
+    cart.save(update_fields=['updated_at'])
+
+    messages.success(request, f'Товар {cart_product.product.name} удалён из корзины')
+
+    return redirect('store:cart_detail', cart_id=cart.id)

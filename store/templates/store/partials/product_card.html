@@ -4,7 +4,7 @@
     <div class="card-content">
         <h3 class="product-name">{{ product.name }}</h3>
         {% if product.description %}
-        <p class="product-desc">{{ product.description|truncatewords:5 }}</p>
+        <p class="product-desc">{{ product.description|truncatewords:15 }}</p>
         {% endif %}
 
         <div class="product-footer">

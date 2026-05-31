@@ -1,3 +1,91 @@
-{% block cart_detalization %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'store/css/cart_detail.css' %}">
+    <title>Коризна #{{ cart.id }}</title>
+</head>
+<body>
+    <div class="container">
+        <div class="heading">
+            <h1>Корзина #{{ cart.id }}</h1>
+            <a href="{% url 'store:carts_list' %}" class="btn to-carts-btn">К списку корзин</a>
+        </div>
+    </div>
 
-{% endblock %}
+    <section class="cart-header">
+        <div class="info-item">
+            <span class="label">Покупатель</span>
+            <span class="value">{{ cart.customer.name }}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Статус</span>
+            <span class="value status status-{{ cart.status|lower }}">{{ cart.get_status_display|default:cart.status }}</span>
+        <div class="info-item">
+            <span class="label">Дата и время создания</span>
+            <span class="value">{{ cart.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Дата и время обновления</span>
+            <span class="value">{{ cart.updated_at|date:"d.m.Y H:i" }}</span>
+        </div>
+    </section>
+
+    <section class="cart-container">
+        <h2>Товары в корзине</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Сумма</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.products.all %}
+                <tr>
+                    <td>
+                        <span class="product-name">{{ item.product.name }}</span>
+                    </td>
+                    <td>{{ item.product.price|floatformat:2 }}</td>
+                    <td>
+                        <form method="POST" class="qty-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="product-id" value="{{ item.product.id }}">
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="99">
+                            <button type="submit" class="btn-sm btn-update">Применить</button>
+                        </form>
+                    </td>
+                    <td class="total-sum">{{ item.product.price|floatformat:2 }} руб.</td>
+                    <td>
+                        <form method="POST" action="{% url 'store:remove_from_cart' cart.id item.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-sm btn-remove" onclick="return confirm('Удалить этот товар из корзины?');">
+                                Удалить
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr class="empty-row"><td colspan="5">Корзина пуста</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="totals">
+            <div class="total-product">
+                <span class="total-label">Всего позиций</span>
+                <span class="total-value">{{ cart.products.count }}</span>
+            </div>
+            <div class="total-product">
+                <span class="total-label">Итоговая сумма</span>
+                <span class="total-value">{{ cart.total_price }}</span>
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'store/js/script.js' %}"></script>
+</body>
+</html>

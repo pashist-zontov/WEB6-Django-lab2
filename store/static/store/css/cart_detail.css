@@ -1,0 +1,39 @@
+:root {
+    --primary: #2d3436;
+    --secondary: #636e72;
+    --accent: #0984e3;
+    --light: #f5f6fa;
+    --transition: 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-weight: 650;
+    border: 2px solid red;
+}
+
+body {
+    background: var(--light);
+    color: var(--primary);
+    line-height: 1.6;
+}
+
+.heading {
+    font-size: 40px;
+    text-align: center;
+    padding: 20px 0 20px 0;
+    margin-bottom: 100px;
+    color: var(--light);
+    background-color: var(--secondary);
+    
+}
+
+.to-carts-btn {
+    color: var(--light);
+    text-decoration: none;
+    font-size: 30px;
+}
+
